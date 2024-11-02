@@ -12,7 +12,7 @@ use metrics_exporter_prometheus::PrometheusHandle;
 use tokio::time::Instant;
 use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
-use tracing::{info, instrument};
+use tracing::{info, instrument, warn};
 
 use crate::{
     error::HandlerError,
@@ -70,32 +70,62 @@ async fn metrics(State(handle): State<PrometheusHandle>) -> String {
 }
 
 async fn posts() -> Result<Json<Vec<PostInfo>>, HandlerError> {
-    let posts = PostInfo::read_from_folder("posts").await.unwrap();
+    let posts = PostInfo::read_from_folder("posts").await.map_err(|e| {
+        warn!("Failed to read post directory: {}", e);
+        HandlerError::new(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to read posts: {}", e),
+        )
+    })?;
     Ok(Json(posts))
 }
 
 async fn get_post(Path(filename): Path<String>) -> Result<Bytes, HandlerError> {
     let post = Post::read_from_file(&format!("posts/{}", filename))
         .await
-        .unwrap();
+        .map_err(|e| {
+            warn!("Failed to read post: {}", e);
+            HandlerError::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to read post: {}", e),
+            )
+        })?;
     Ok(Bytes::from(post.body))
 }
 
 async fn pinned() -> Result<Json<Vec<PostInfo>>, HandlerError> {
-    let posts = PostInfo::read_from_folder("pinned").await.unwrap();
+    let posts = PostInfo::read_from_folder("pinned").await.map_err(|e| {
+        warn!("Failed to read pinned directory: {}", e);
+        HandlerError::new(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Failed to read pinned posts: {}", e),
+        )
+    })?;
     Ok(Json(posts))
 }
 
 async fn get_pinned(Path(filename): Path<String>) -> Result<Bytes, HandlerError> {
     let post = Post::read_from_file(&format!("pinned/{}", filename))
         .await
-        .unwrap();
+        .map_err(|e| {
+            warn!("Failed to read pinned post: {}", e);
+            HandlerError::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to read pinned post: {}", e),
+            )
+        })?;
     Ok(Bytes::from(post.body))
 }
 
 async fn get_image(Path(filename): Path<String>) -> Result<Bytes, HandlerError> {
     let image = tokio::fs::read(&format!("images/{}", filename))
         .await
-        .unwrap();
+        .map_err(|e| {
+            warn!("Failed to read image: {}", e);
+            HandlerError::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to read image: {}", e),
+            )
+        })?;
     Ok(Bytes::from(image))
 }
