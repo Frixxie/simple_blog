@@ -5,7 +5,7 @@ mod router;
 use anyhow::Result;
 use metrics_exporter_prometheus::PrometheusBuilder;
 use structopt::StructOpt;
-use tracing::{info, Level};
+use tracing::Level;
 use tracing_subscriber::FmtSubscriber;
 
 #[derive(Debug, Clone)]
