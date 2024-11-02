@@ -1,9 +1,6 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
-
-interface Post {
-    title: string;
-    index: number;
-}
+import type { Post } from "../../components/FileTable.tsx";
+import FileTable from "../../components/FileTable.tsx";
 
 export const handler: Handlers<Post[]> = {
     async GET(_req, ctx) {
@@ -18,24 +15,7 @@ export const handler: Handlers<Post[]> = {
 export default function Page(props: PageProps<Post[]>) {
     return (
         <div>
-            <table class="table-auto">
-                <thead>
-                    <tr>
-                        <th class="border px-4 py-2">Posts</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.data.map((post) => (
-                        <tr>
-                            <td class="border px-4 py-2">
-                                <a href={`${post.title}`}>
-                                    {post.title}
-                                </a>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <FileTable title="Pinned Posts" posts={props.data} />
         </div>
     );
 }

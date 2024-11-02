@@ -1,6 +1,6 @@
-import { CSS, render } from "@deno/gfm";
-import { Head } from "$fresh/runtime.ts";
+import { render } from "@deno/gfm";
 import type { Handlers, PageProps } from "$fresh/server.ts";
+import BlogPost from "../../components/BlogPost.tsx";
 
 export const handler: Handlers<string> = {
     async GET(_req, ctx) {
@@ -19,16 +19,7 @@ export const handler: Handlers<string> = {
 export default function Post(props: PageProps<string>) {
     return (
         <div>
-            <Head>
-                <style dangerouslySetInnerHTML={{ __html: CSS }} />
-            </Head>
-
-            <div
-                class="mt-8 markdown-body"
-                dangerouslySetInnerHTML={{
-                    __html: props.data,
-                }}
-            />
+            <BlogPost data={props.data} />
         </div>
     );
 }

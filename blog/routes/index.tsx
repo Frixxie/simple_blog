@@ -1,9 +1,5 @@
 import type { Handlers, PageProps } from "$fresh/server.ts";
-
-interface Post {
-    title: string;
-    index: number;
-}
+import FileTable, { type Post } from "../components/FileTable.tsx";
 
 interface Posts {
     posts: Post[];
@@ -35,42 +31,8 @@ export const handler: Handlers<Posts> = {
 export default function Page(props: PageProps<Posts>) {
     return (
         <div>
-            <table class="table-auto w-64">
-                <thead>
-                    <tr>
-                        <th class="border px-4 py-2">Pinned</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.data.pinned_posts.map((post) => (
-                        <tr>
-                            <td class="border px-4 py-2">
-                                <a class="hover:underline" href={post.title}>
-                                    {post.title}
-                                </a>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <table class="table-auto w-64">
-                <thead>
-                    <tr>
-                        <th class="border px-4 py-2">Posts</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.data.posts.map((post) => (
-                        <tr>
-                            <td class="border px-4 py-2">
-                                <a class="hover:underline" href={post.title}>
-                                    {post.title}
-                                </a>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <FileTable title="Pinned" posts={props.data.pinned_posts} />
+            <FileTable title="Posts" posts={props.data.posts} />
         </div>
     );
 }

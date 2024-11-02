@@ -34,6 +34,7 @@ impl PostInfo {
         counter!(format!("{}.sum", folder_path)).absolute(posts.len() as u64);
 
         posts.sort_by_key(|post| post.date_created);
+        posts.reverse();
 
         Ok(posts)
     }
