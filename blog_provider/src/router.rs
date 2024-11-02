@@ -51,6 +51,7 @@ pub fn create_router(metrics_handler: PrometheusHandle) -> Router {
         .route("/api/posts/:filename", get(get_post))
         .route("/api/pinned", get(pinned))
         .route("/api/pinned/:filename", get(get_pinned))
+        .route("/images/:filename", get(get_image))
         .layer(
             ServiceBuilder::new()
                 .layer(TraceLayer::new_for_http())
@@ -90,4 +91,11 @@ async fn get_pinned(Path(filename): Path<String>) -> Result<Bytes, HandlerError>
         .await
         .unwrap();
     Ok(Bytes::from(post.body))
+}
+
+async fn get_image(Path(filename): Path<String>) -> Result<Bytes, HandlerError> {
+    let image = tokio::fs::read(&format!("images/{}", filename))
+        .await
+        .unwrap();
+    Ok(Bytes::from(image))
 }
