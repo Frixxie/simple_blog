@@ -1,0 +1,23 @@
+name: Make
+
+on:
+  push:
+    branches: [ "master" ]
+    # Publish semver tags as releases.
+
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  GITHUB_USER: frixxie
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: docker push
+        run: make publish_containers
