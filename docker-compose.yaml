@@ -1,0 +1,12 @@
+services:
+  blog:
+    build: blog
+    ports:
+      - "8000:8000"
+
+  blog_provider:
+    build: blog_provider
+    ports:
+      - "3000:3000"
+
+
