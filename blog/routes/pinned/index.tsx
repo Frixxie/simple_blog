@@ -4,7 +4,8 @@ import FileTable from "../../components/FileTable.tsx";
 
 export const handler: Handlers<Post[]> = {
     async GET(_req, ctx) {
-        const posts: Post[] = await fetch("http://localhost:3000/api/pinned")
+        const provider_host = Deno.env.get("BLOG_PROVIDER_HOST");
+        const posts: Post[] = await fetch(`${provider_host}api/pinned`)
             .then((
                 res,
             ) => res.json());

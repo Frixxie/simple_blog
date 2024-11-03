@@ -8,7 +8,8 @@ interface Posts {
 
 export const handler: Handlers<Posts> = {
     async GET(_req, ctx) {
-        const posts: Post[] = await fetch("http://localhost:3000/api/posts")
+        const provider_host = Deno.env.get("BLOG_PROVIDER_HOST");
+        const posts: Post[] = await fetch(`${provider_host}api/posts`)
             .then((
                 res,
             ) => res.json()).catch((err) => {
@@ -16,7 +17,7 @@ export const handler: Handlers<Posts> = {
                 ctx.renderNotFound();
             });
         const pinned_posts: Post[] = await fetch(
-            "http://localhost:3000/api/pinned",
+            `${provider_host}api/pinned`,
         )
             .then((
                 res,

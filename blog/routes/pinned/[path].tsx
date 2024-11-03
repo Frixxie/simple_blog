@@ -4,9 +4,10 @@ import BlogPost from "../../components/BlogPost.tsx";
 
 export const handler: Handlers<string> = {
     async GET(_req, ctx) {
+        const provider_host = Deno.env.get("BLOG_PROVIDER_HOST");
         const path = ctx.params.path;
         const post: string = await fetch(
-            `http://localhost:3000/api/pinned/${path}`,
+            `${provider_host}api/pinned/${path}`,
         )
             .then((
                 res,
