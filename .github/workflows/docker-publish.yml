@@ -2,12 +2,13 @@ name: Make
 
 on:
   push:
-    branches: [ "master" ]
+    tags: [ '*.*.*' ]
     # Publish semver tags as releases.
 
 env:
   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   GITHUB_USER: frixxie
+  DOCKERTAG: ${{github.ref_name}}
 
 jobs:
   build:
@@ -20,4 +21,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: docker push
-        run: make publish_containers
+        run: make publish_containers_tagged
+
+  generate-changelog:
+    name: Generate changelog
+    runs-on: ubuntu-22.04
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@main
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: -vv --latest --no-exec --github-repo ${{ github.repository }}
