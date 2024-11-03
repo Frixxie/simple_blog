@@ -1,12 +1,16 @@
 services:
   blog:
-    build: blog
+    image: ghcr.io/frixxie/simple_blog:0.1.1
     ports:
       - "8000:8000"
+    env_file: blog/.env
 
   blog_provider:
-    build: blog_provider
+    image: ghcr.io/frixxie/simple_blog_provider:0.1.1
     ports:
       - "3000:3000"
-
+    volumes:
+      - ./blog_provider/posts:/posts
+      - ./blog_provider/pinned:/pinned
+      - ./blog_provider/images:/images
 
