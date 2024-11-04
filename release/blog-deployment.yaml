@@ -27,7 +27,7 @@ spec:
                 configMapKeyRef:
                   key: BLOG_PROVIDER_HOST
                   name: blog-env
-          image: ghcr.io/frixxie/simple_blog:0.1.1
+          image: ghcr.io/frixxie/simple_blog:0.1.2
           name: blog
           ports:
             - containerPort: 8000

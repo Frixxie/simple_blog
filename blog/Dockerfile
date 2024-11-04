@@ -10,4 +10,4 @@ RUN deno task build
 
 EXPOSE 8000
 
-CMD ["task", "start"]
+CMD ["run", "-A", "main.ts"]
