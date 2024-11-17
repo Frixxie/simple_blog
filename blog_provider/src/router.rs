@@ -31,7 +31,9 @@ pub async fn profile_endpoint(request: Request, next: Next) -> Response {
 
     let elapsed = now.elapsed();
 
-    histogram!("handler", method.clone() => uri.clone()).record(elapsed);
+    let labels = [("method", method.clone()), ("uri", uri.clone())];
+
+    histogram!("handler", &labels).record(elapsed);
 
     info!(
         "Finished handling {} at {}, used {} ms",
